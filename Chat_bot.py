@@ -2,10 +2,10 @@ import telebot
 from urllib.parse import urlparse
 from telebot import types
 from validator_collection import checkers
-from OPD_lib_new import ChatBotFunc
+from OPD_lib import ChatBotFunc
 
 chat_bot = ChatBotFunc()
-bot = telebot.TeleBot('6454458030:AAGxB7OIxR4TLMoWQdZstJVnPCrQk4Dmdyw')
+bot = telebot.TeleBot(open('token_bot.txt').read())
 
 @bot.message_handler(commands=['start'])
 def start(chat):
@@ -18,7 +18,7 @@ def start(chat):
                                    'Вам нужно написать символ @, затем написать слово Vid и ввести название видео, которое хотите найти.\n'
                                    'Далее в появившейся всплывающей панеле, выберите нужное вам видео и начните его обработку!\n'
                                    '\n'
-                                   'Наш бот расчитан на видео до 15 минут, так как пока есть определенные проблемы с оптимизацией кода. Наша команда надеется'
+                                   'Наш бот расчитан на видео до 30 минут, так как пока есть определенные проблемы с оптимизацией кода. Наша команда надеется'
                                    ' на ваше понимание! Спасибо!', parse_mode='html')
     bot.register_next_step_handler(chat, url_text)
 
@@ -73,9 +73,13 @@ def reset(chat):
     '''
     markup = types.InlineKeyboardMarkup(row_width=1)
     button_reset = types.InlineKeyboardButton('Начать заново', callback_data='reset')
-    markup.add(button_reset)
+    button1 = types.InlineKeyboardButton('Краткое описание', callback_data='short_desc')
+    button2 = types.InlineKeyboardButton('Тайм-коды', callback_data='time_code')
+    markup.add(button_reset, button1, button2)
     bot.send_message(chat.message.chat.id,'Если хотите продолжить пользоваться нашим сервисом и узнавать краткое описание благодаря нам'
-                                          ', нажмите на кнопку <b>"Начать заново!"</b>', parse_mode='html',reply_markup=markup)
+                                          ', нажмите на кнопку <b>"Начать заново!"</b>\n'
+                                          '\n'
+                                          'Также вы можете воспользоваться функциями <b>"Краткого описания"</b> или <b>"Тайм-кодов"</b> еще раз, если что-то из этого не было выбрано вами', parse_mode='html',reply_markup=markup)
 
 def chat_bot_callback(chat):
     bot.send_message(chat.message.chat.id, 'Принято, идет обработка вашего запроса. Пожалуйста, подождите!')
